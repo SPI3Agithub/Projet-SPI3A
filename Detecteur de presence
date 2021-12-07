@@ -32,7 +32,7 @@ void setup() {
 void loop() { 
   
   if(cpt%2 == 0){
-    capteurD();} //Reste a faire alterner les deux capteurs
+    capteurD();} 
   else{
     capteurG();}
   delay(500);
