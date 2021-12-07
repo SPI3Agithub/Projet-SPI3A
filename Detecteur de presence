@@ -13,6 +13,10 @@ const int sensor1 = 13;
 const int sensor2 = 2;
 const int buzzer = 7;
 int cpt = 0;
+//codes necessaire pour l'utilisation de dectecteur a 5 pins
+//int trig = 12;
+//int echo = 13;
+//long lecture_echo;
 
 void setup() { 
   pinMode(L1, OUTPUT); 
@@ -23,20 +27,30 @@ void setup() {
   digitalWrite(L1, LOW); 
   digitalWrite(L2, LOW);
   digitalWrite(L3, LOW);
- 
+  
+  //codes necessaire pour l'utilisation de dectecteur a 5 pins
+  //pinMode(trig, OUTPUT);
+  //pinMode(echo, INPUT);
   
 }
 
 //Si >200 : 0 led; si >=200 & >150 : 1 led; si <=150 & >100 : 2 leds;
 //si <100 3 leds + musique
 void loop() { 
-  
+
   if(cpt%2 == 0){
     capteurD();} 
   else{
     capteurG();}
   delay(500);
   cpt = cpt+1;
+  
+  //codes necessaire pour l'utilisation de dectecteur a 5 pins
+  //digitalWrite(trig, HIGH);
+  //delayMicroseconds(10);
+  //digitalWrite(trig, LOW);
+  //lecture_echo = pulseIn(echo,HIGH);
+  //cm = lecture_echo*0.034/2;
 }
 
 void capteurD(){ //Detection avec capteur de droite
