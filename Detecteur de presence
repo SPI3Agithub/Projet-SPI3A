@@ -1,0 +1,150 @@
+#define NOTE_FS5 740
+#define NOTE_D5  587
+#define NOTE_B4  494
+#define NOTE_E5  659
+#define NOTE_GS5 831
+#define NOTE_A5  880
+#define NOTE_B5  988
+
+const int L1 = 10; 
+const int L2 = 9; 
+const int L3 = 8;
+const int sensor1 = 13;
+const int sensor2 = 2;
+const int buzzer = 7;
+int cpt = 0;
+
+void setup() { 
+  pinMode(L1, OUTPUT); 
+  pinMode(L2, OUTPUT); 
+  pinMode(L3, OUTPUT); 
+  pinMode(buzzer, OUTPUT);
+  
+  digitalWrite(L1, LOW); 
+  digitalWrite(L2, LOW);
+  digitalWrite(L3, LOW);
+ 
+  
+}
+
+//Si >200 : 0 led; si >=200 & >150 : 1 led; si <=150 & >100 : 2 leds;
+//si <100 3 leds + musique
+void loop() { 
+  
+  if(cpt%2 == 0){
+    capteurD();} //Reste a faire alterner les deux capteurs
+  else{
+    capteurG();}
+  delay(500);
+  cpt = cpt+1;
+}
+
+void capteurD(){ //Detection avec capteur de droite
+  
+  //Capteur ultrasons différent de irl car 3 entrées
+  long d, cm;
+     
+  
+  
+  pinMode(sensor2, OUTPUT);
+  digitalWrite(sensor2, LOW);
+  delayMicroseconds(2);
+  digitalWrite(sensor2, HIGH);
+  delayMicroseconds(5);
+  digitalWrite(sensor2, LOW);
+  
+  pinMode(sensor2, INPUT);
+  d = pulseIn(sensor2, HIGH);  
+  cm = d/29/2;; 
+  //Print la distance fait bug la musique
+  
+  //Conditions allumage des leds : 
+  if(cm < 200 && cm>150){ 
+    digitalWrite(L1, HIGH);
+    digitalWrite(L2, LOW);
+    digitalWrite(L3, LOW);
+  }else if(cm<=150 && cm>100){
+    digitalWrite(L1, HIGH);
+    digitalWrite(L2, HIGH);
+    digitalWrite(L3, LOW);
+  }else if(cm<=100){    
+    digitalWrite(L1, HIGH);
+    digitalWrite(L2, HIGH);
+    digitalWrite(L3, HIGH);  
+    PlayMusic();
+  }else{
+    digitalWrite(L1, LOW);
+    digitalWrite(L2, LOW);
+    digitalWrite(L3, LOW);
+  }   
+}
+
+void capteurG(){ //Detection avec capteur de gauche
+  
+  //Capteur ultrasons différent de irl car 3 entrées
+  long d, cm;
+     
+  pinMode(sensor1, OUTPUT);
+  digitalWrite(sensor1, LOW);
+  delayMicroseconds(2);
+  digitalWrite(sensor1, HIGH);
+  delayMicroseconds(5);
+  digitalWrite(sensor1, LOW);
+  
+  pinMode(sensor1, INPUT);
+  d = pulseIn(sensor1, HIGH);  
+  cm = d/29/2;; 
+  //Print la distance fait bug la musique
+  
+  //Conditions allumage des leds : 
+  if(cm < 200 && cm>150){ 
+    digitalWrite(L1, HIGH);
+    digitalWrite(L2, LOW);
+    digitalWrite(L3, LOW);
+  }else if(cm<=150 && cm>100){
+    digitalWrite(L1, HIGH);
+    digitalWrite(L2, HIGH);
+    digitalWrite(L3, LOW);
+  }else if(cm<=100){    
+    digitalWrite(L1, HIGH);
+    digitalWrite(L2, HIGH);
+    digitalWrite(L3, HIGH);  
+    PlayMusic();
+  }else{
+    digitalWrite(L1, LOW);
+    digitalWrite(L2, LOW);
+    digitalWrite(L3, LOW);
+  }   
+}
+
+
+//Partie musique - Actuellement Take On Me
+int melody[] = {
+  NOTE_FS5, NOTE_FS5, NOTE_D5, NOTE_B4, NOTE_B4, NOTE_E5, 
+  NOTE_E5, NOTE_E5, NOTE_GS5, NOTE_GS5, NOTE_A5, NOTE_B5, 
+  NOTE_A5, NOTE_A5, NOTE_A5, NOTE_E5, NOTE_D5, NOTE_FS5, 
+  NOTE_FS5, NOTE_FS5, NOTE_E5, NOTE_E5, NOTE_FS5, NOTE_E5
+};
+
+int durations[] = {
+  8, 8, 8, 4, 4, 4, 
+  4, 5, 8, 8, 8, 8, 
+  8, 8, 8, 4, 4, 4, 
+  4, 5, 8, 8, 8, 8
+};
+
+int songLength = sizeof(melody)/sizeof(melody[0]);
+
+void PlayMusic(){
+  for (int thisNote = 0; thisNote < songLength; thisNote++){
+    // determine the duration of the notes that the computer understands
+    // divide 1000 by the value, so the first note lasts for 1000/8 milliseconds
+    int duration = 1000/ durations[thisNote];
+    tone(buzzer, melody[thisNote], duration);
+    // pause between notes
+    int pause = duration * 1.3;
+    delay(pause);
+    // stop the tone
+    noTone(buzzer);
+  }
+}
